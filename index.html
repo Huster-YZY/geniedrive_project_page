@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Supplementary Video Viewer</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: #fafafa;
+            color: #222;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .grid-container_4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .video-item {
+            background: #ffffff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+        }
+
+        video {
+            width: 100%;
+            border-radius: 8px;
+        }
+
+        .filename {
+            font-weight: bold;
+            margin-bottom: 8px;
+            font-size: 16px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Supplementary Video Material</h1>
+    <p>This page displays the supplementary videos included in this submission.</p>
+    <hr>
+
+    <!-- =======================
+         1. TEASER
+    ======================== -->
+    <h2>Physics-Aware Driving Video Generation</h2>
+    <div class="grid-container" id="videoGrid"></div>
+
+    <script>
+        const videos = [
+            { src: "videos/teaser/turn_left.mp4", title: "Turn Left" },
+            { src: "videos/teaser/go_straight.mp4", title: "Go Straight" },
+            { src: "videos/teaser/turn_right.mp4", title: "Turn Right" },
+            { src: "videos/teaser/turn_left_2.mp4", title: "Turn Left (Case 2)" },
+            { src: "videos/teaser/go_straight_2.mp4", title: "Go Straight (Case 2)" },
+            { src: "videos/teaser/turn_right_2.mp4", title: "Turn Right (Case 2)" }
+        ];
+
+        const grid = document.getElementById("videoGrid");
+
+        videos.forEach(item => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "video-item";
+
+            const label = document.createElement("div");
+            label.className = "filename";
+            label.textContent = item.title;
+
+            const video = document.createElement("video");
+            video.controls = true;
+            video.src = item.src;
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(video);
+            grid.appendChild(wrapper);
+        });
+    </script>
+
+
+    <!-- =======================
+         2. COMPARISON
+    ======================== -->
+    <h2>Comparison with Previous Driving World Models</h2>
+    <div class="grid-container" id="videoGridCmp"></div>
+
+    <script>
+        const cmp_videos = [
+            { src: "videos/comparison/vista/vista_turn_left.mp4", title: "Vista – Turn Left" },
+            { src: "videos/comparison/vista/vista_go_straight.mp4", title: "Vista – Go Straight" },
+            { src: "videos/comparison/vista/vista_turn_right.mp4", title: "Vista – Turn Right" },
+
+            { src: "videos/comparison/epona/epona_turn_left.mp4", title: "Epona – Turn Left" },
+            { src: "videos/comparison/epona/epona_go_straight.mp4", title: "Epona – Go Straight" },
+            { src: "videos/comparison/epona/epona_turn_right.mp4", title: "Epona – Turn Right" },
+
+            { src: "videos/comparison/ours/turn_left.mp4", title: "Ours – Turn Left" },
+            { src: "videos/comparison/ours/go_straight.mp4", title: "Ours – Go Straight" },
+            { src: "videos/comparison/ours/turn_right.mp4", title: "Ours – Turn Right" }
+        ];
+
+        const Cmpgrid = document.getElementById("videoGridCmp");
+
+        cmp_videos.forEach(item => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "video-item";
+
+            const label = document.createElement("div");
+            label.className = "filename";
+            label.textContent = item.title;
+
+            const video = document.createElement("video");
+            video.controls = true;
+            video.src = item.src;
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(video);
+            Cmpgrid.appendChild(wrapper);
+        });
+    </script>
+
+
+    <!-- =======================
+         3. EDITING RESULTS
+    ======================== -->
+    <h2>Driving Video Editing</h2>
+    <div class="grid-container_4" id="videoGridEdit"></div>
+
+    <script>
+        const edit_videos = [
+            { src: "videos/edit/before_edit_0.mp4", title: "Before Editing (Scene 1)" },
+            { src: "videos/edit/edit_0.mp4", title: "Removing the Car (Scene 1)" },
+            { src: "videos/edit/before_edit_1.mp4", title: "Before Editing (Scene 2)" },
+            { src: "videos/edit/edit_1.mp4", title: "Inserting a Truck (Scene 2)" }
+        ];
+
+        const edit_video_grid = document.getElementById("videoGridEdit");
+
+        edit_videos.forEach(item => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "video-item";
+
+            const label = document.createElement("div");
+            label.className = "filename";
+            label.textContent = item.title;
+
+            const video = document.createElement("video");
+            video.controls = true;
+            video.src = item.src;
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(video);
+            edit_video_grid.appendChild(wrapper);
+        });
+    </script>
+
+
+    <!-- =======================
+         4. LONG VIDEO GENERATION
+    ======================== -->
+    <h2>Long Video Generation</h2>
+
+    <div class="grid-container" id="videoGridLong"></div>
+
+    <script>
+        const long_videos = [
+            { src: "videos/long_videos/long_video_1.mp4", title: "Long Video – Scene 1" },
+            { src: "videos/long_videos/long_video_2.mp4", title: "Long Video – Scene 2" },
+            { src: "videos/long_videos/long_video_3.mp4", title: "Long Video – Scene 3" }
+        ];
+
+        const long_video_grid = document.getElementById("videoGridLong");
+
+        long_videos.forEach(item => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "video-item";
+
+            const label = document.createElement("div");
+            label.className = "filename";
+            label.textContent = item.title;
+
+            const video = document.createElement("video");
+            video.controls = true;
+            video.src = item.src;
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(video);
+            long_video_grid.appendChild(wrapper);
+        });
+    </script>
+
+    <!-- =======================
+         5. SIM2REAL
+    ======================== -->
+    <h2>Sim-to-Real Generation</h2>
+
+    <div class="grid-container_4" id="videoGridSR"></div>
+
+    <script>
+        const sim2real_videos = [
+            { src: "videos/sim2real/sim_1.mp4", title: "Simulation – Scene 1" },
+            { src: "videos/sim2real/real_1.mp4", title: "Our Generation – Scene 1" },
+            { src: "videos/sim2real/sim_2.mp4", title: "Simulation – Scene 2" },
+            { src: "videos/sim2real/real_2.mp4", title: "Our Generation – Scene 2" }
+        ];
+
+        const sim2real_video_grid = document.getElementById("videoGridSR");
+
+        sim2real_videos.forEach(item => {
+            const wrapper = document.createElement("div");
+            wrapper.className = "video-item";
+
+            const label = document.createElement("div");
+            label.className = "filename";
+            label.textContent = item.title;
+
+            const video = document.createElement("video");
+            video.controls = true;
+            video.src = item.src;
+
+            wrapper.appendChild(label);
+            wrapper.appendChild(video);
+            sim2real_video_grid.appendChild(wrapper);
+        });
+    </script>
+
+</body>
+
+</html>
