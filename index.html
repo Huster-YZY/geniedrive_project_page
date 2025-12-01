@@ -1,246 +1,523 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <title>Supplementary Video Viewer</title>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="Deformable Neural Radiance Fields creates free-viewpoint portraits (nerfies) from casually captured videos.">
+  <meta name="keywords" content="Nerfies, D-NeRF, NeRF">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GenieDrive: Towards Physics-Aware Driving World Model with 4D Occupancy Guided Video Generation</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background: #fafafa;
-            color: #222;
-        }
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
 
-        h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
+    function gtag() {
+      dataLayer.push(arguments);
+    }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-            margin-top: 30px;
-        }
+    gtag('js', new Date());
 
-        .grid-container_4 {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 25px;
-            margin-top: 30px;
-        }
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
 
-        .video-item {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
-        }
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
 
-        video {
-            width: 100%;
-            border-radius: 8px;
-        }
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
 
-        .filename {
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 16px;
-            text-align: center;
-        }
-    </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+
+  <style>
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .grid-container_4 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .grid-container_1 {
+      display: grid;
+      grid-template-columns: repeat(1, 1fr);
+      gap: 25px;
+      margin-top: 30px;
+    }
+
+    .video-item {
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+    }
+
+    video {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    .filename {
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 16px;
+      text-align: center;
+    }
+  </style>
 </head>
 
 <body>
 
-    <h1>Supplementary Video Material</h1>
-    <p>This page displays the supplementary videos included in this submission.</p>
-    <hr>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </a>
+    </div>
+    <div class="navbar-menu">
+      <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+        <a class="navbar-item" href="https://github.com/Huster-YZY">
+          <span class="icon">
+            <i class="fas fa-home"></i>
+          </span>
+        </a>
 
-    <!-- =======================
-         1. TEASER
-    ======================== -->
-    <h2>Physics-Aware Driving Video Generation</h2>
-    <div class="grid-container" id="videoGrid"></div>
+        <!-- <div class="navbar-item has-dropdown is-hoverable">
+          <a class="navbar-link">
+            More Research
+          </a>
+          <div class="navbar-dropdown">
+            <a class="navbar-item" href="https://hypernerf.github.io">
+              HyperNeRF
+            </a>
+            <a class="navbar-item" href="https://nerfies.github.io">
+              Nerfies
+            </a>
+            <a class="navbar-item" href="https://latentfusion.github.io">
+              LatentFusion
+            </a>
+            <a class="navbar-item" href="https://photoshape.github.io">
+              PhotoShape
+            </a>
+          </div>
+        </div> -->
+      </div>
 
-    <script>
-        const videos = [
-            { src: "videos/teaser/turn_left.mp4", title: "Turn Left" },
-            { src: "videos/teaser/go_straight.mp4", title: "Go Straight" },
-            { src: "videos/teaser/turn_right.mp4", title: "Turn Right" },
-            { src: "videos/teaser/turn_left_2.mp4", title: "Turn Left (Case 2)" },
-            { src: "videos/teaser/go_straight_2.mp4", title: "Go Straight (Case 2)" },
-            { src: "videos/teaser/turn_right_2.mp4", title: "Turn Right (Case 2)" }
-        ];
-
-        const grid = document.getElementById("videoGrid");
-
-        videos.forEach(item => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "video-item";
-
-            const label = document.createElement("div");
-            label.className = "filename";
-            label.textContent = item.title;
-
-            const video = document.createElement("video");
-            video.controls = true;
-            video.src = item.src;
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(video);
-            grid.appendChild(wrapper);
-        });
-    </script>
-
-
-    <!-- =======================
-         2. COMPARISON
-    ======================== -->
-    <h2>Comparison with Previous Driving World Models</h2>
-    <div class="grid-container" id="videoGridCmp"></div>
-
-    <script>
-        const cmp_videos = [
-            { src: "videos/comparison/vista/vista_turn_left.mp4", title: "Vista – Turn Left" },
-            { src: "videos/comparison/vista/vista_go_straight.mp4", title: "Vista – Go Straight" },
-            { src: "videos/comparison/vista/vista_turn_right.mp4", title: "Vista – Turn Right" },
-
-            { src: "videos/comparison/epona/epona_turn_left.mp4", title: "Epona – Turn Left" },
-            { src: "videos/comparison/epona/epona_go_straight.mp4", title: "Epona – Go Straight" },
-            { src: "videos/comparison/epona/epona_turn_right.mp4", title: "Epona – Turn Right" },
-
-            { src: "videos/comparison/ours/turn_left.mp4", title: "Ours – Turn Left" },
-            { src: "videos/comparison/ours/go_straight.mp4", title: "Ours – Go Straight" },
-            { src: "videos/comparison/ours/turn_right.mp4", title: "Ours – Turn Right" }
-        ];
-
-        const Cmpgrid = document.getElementById("videoGridCmp");
-
-        cmp_videos.forEach(item => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "video-item";
-
-            const label = document.createElement("div");
-            label.className = "filename";
-            label.textContent = item.title;
-
-            const video = document.createElement("video");
-            video.controls = true;
-            video.src = item.src;
-
-            wrapper.appendChild(label);
-            wrapper.appendChild(video);
-            Cmpgrid.appendChild(wrapper);
-        });
-    </script>
+    </div>
+  </nav>
 
 
-    <!-- =======================
-         3. EDITING RESULTS
-    ======================== -->
-    <h2>Driving Video Editing</h2>
-    <div class="grid-container_4" id="videoGridEdit"></div>
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title">GenieDrive: Towards Physics-Aware Driving World Model with 4D
+              Occupancy Guided Video Generation</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=4nk3hAgAAAAJ&hl=zh-CN">Zhenya
+                  Yang</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://happinesslz.github.io">Zhe Liu</a><sup>1</sup>,</span>
+              <span class="author-block">
+                <a href="https://innovator-zero.github.io">Yuxiang Lu</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                Liping Hou<sup>2</sup>,
+              </span>
+              <span class="author-block">
+                <a href="https://scholar.google.com/citations?user=184t8cAAAAAJ&hl=en">Chenxuan Miao</a><sup>1</sup>,
+              </span>
+              <span class="author-block">
+                Siyi Peng<sup>2</sup>,
+              </span>
+              <span class="author-block">
+                Bailan Feng<sup>2</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://xbai.vlrlab.net">Xiang Bai</a><sup>3</sup>
+              </span>
+              <span class="author-block">
+                <a href="https://i.cs.hku.hk/~hszhao/">Hengshuang Zhao</a><sup>1</sup>
+              </span>
+            </div>
 
-    <script>
-        const edit_videos = [
-            { src: "videos/edit/before_edit_0.mp4", title: "Before Editing (Scene 1)" },
-            { src: "videos/edit/edit_0.mp4", title: "Removing the Car (Scene 1)" },
-            { src: "videos/edit/before_edit_1.mp4", title: "Before Editing (Scene 2)" },
-            { src: "videos/edit/edit_1.mp4", title: "Inserting a Truck (Scene 2)" }
-        ];
+            <div class="is-size-5 publication-authors">
+              <span class="author-block"><sup>1</sup>University of Hong Kong,</span>
+              <span class="author-block"><sup>2</sup>Huawei Noah's Ark Lab</span>
+              <span class="author-block"><sup>3</sup>Huazhong University of Science and Technology</span>
+            </div>
 
-        const edit_video_grid = document.getElementById("videoGridEdit");
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://github.com/Huster-YZY" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <!-- Code Link. -->
+                <span class="link-block">
+                  <a href="https://github.com/Huster-YZY" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
 
-        edit_videos.forEach(item => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "video-item";
+              </div>
 
-            const label = document.createElement("div");
-            label.className = "filename";
-            label.textContent = item.title;
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-            const video = document.createElement("video");
-            video.controls = true;
-            video.src = item.src;
+  <section class="hero teaser">
+    <div class="container is-max-desktop">
+      <div class="hero-body">
 
-            wrapper.appendChild(label);
-            wrapper.appendChild(video);
-            edit_video_grid.appendChild(wrapper);
-        });
-    </script>
+        <img src="./static/images/teaser.jpg" class="interpolation-image" alt="Teaser" />
+        <h2 class="subtitle has-text-centered">
+          GenieDrive generatively simulates future occupancy and corresponding multi-view videos given user driving
+          controls and editing operations.
+        </h2>
+      </div>
+    </div>
+  </section>
 
 
-    <!-- =======================
-         4. LONG VIDEO GENERATION
-    ======================== -->
-    <h2>Long Video Generation</h2>
 
-    <div class="grid-container" id="videoGridLong"></div>
+  <style>
+    .gray-background {
+      background-color: #f0f0f0;
+      padding: 20px;
+      border-radius: 5px;
+    }
+  </style>
 
-    <script>
-        const long_videos = [
-            { src: "videos/long_videos/long_video_1.mp4", title: "Long Video – Scene 1" },
-            { src: "videos/long_videos/long_video_2.mp4", title: "Long Video – Scene 2" },
-            { src: "videos/long_videos/long_video_3.mp4", title: "Long Video – Scene 3" }
-        ];
+  <section class="section">
+    <div class="container is-max-desktop gray-background">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Abstract</h2>
+          <div class="content has-text-justified">
+            <p>
+              We propose <span style="font-style: italic;">GenieDrive</span>, a novel
+              framework designed for physics-aware driving video generation.
+              Our approach starts by generating 4D occupancy, which serves as a physics-informed foundation for
+              subsequent video generation.
+              4D occupancy contains rich physical information, including high-resolution 3D structures and dynamics.
+              To facilitate effective compression of such high-resolution occupancy, we propose a VAE that encodes
+              occupancy into a latent tri-plane representation, reducing the latent size to only <strong>58%</strong> of
+              that used in previous methods.
+              We further introduce Mutual Control Attention (MCA) to accurately model the influence of control on
+              occupancy evolution, and we jointly train the VAE and the subsequent prediction module in an end-to-end
+              manner to maximize forecasting accuracy.
+              Together, these designs yield a <strong>7.2%</strong> improvement in forecasting mIoU at an inference
+              speed of <strong>41 FPS</strong>, while using only <strong>3.47 M</strong> parameters.
+              Additionally, a Normalized Multi-View Attention is introduced in the video generation model to generate
+              multi-view driving videos with guidance from our 4D occupancy, significantly improving video quality with
+              a <strong>20.7%</strong> reduction in FVD.
+              Experiments demonstrate that <span style="font-style: italic;">GenieDrive</span> enables highly
+              controllable, multi-view consistent, and physics-aware driving video generation.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+    </div>
+  </section>
 
-        const long_video_grid = document.getElementById("videoGridLong");
+  <section class="section">
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Method</h2>
+        </div>
+      </div>
+      <!--/ Abstract. -->
+      <img src="./static/images/framework.jpg" class="interpolation-image" alt="Method Figure" />
+      <h2 class="subtitle has-text-centered">
+        <strong>Overall framework of <em>GenieDrive</em>.</strong> Our <em>GenieDrive</em> adopts a two-stage generation
+        pipeline that first predicts future occupancy and then generates multi-view driving videos. In the occupancy
+        generation stage, the current occupancy is encoded using a <strong>tri-plane VAE</strong> and processed by our
+        <strong>Mutual Control Attention (MCA)</strong>. The predicted occupancy is rendered into multi-view semantic
+        maps, which are then fed into the DiT blocks enhanced by our <strong>Multi-View Attention (MVA)</strong> module
+        to
+        produce the final multi-view driving
+        videos.
+      </h2>
+    </div>
+  </section>
 
-        long_videos.forEach(item => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "video-item";
 
-            const label = document.createElement("div");
-            label.className = "filename";
-            label.textContent = item.title;
+  <section class="section">
+    <div class="container is-max-desktop">
 
-            const video = document.createElement("video");
-            video.controls = true;
-            video.src = item.src;
+      <!-- Animation. -->
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Video Results</h2>
 
-            wrapper.appendChild(label);
-            wrapper.appendChild(video);
-            long_video_grid.appendChild(wrapper);
-        });
-    </script>
+          <h3 class="title is-4">Physics-Aware Driving Video Generation</h3>
+          <p>
+            Given same initial driving scenarios and different user driving controls (turn left, go straight and turn
+            right), our model can generate diverse
+            future
+            driving videos that accurately reflect the effects of the controls.
+          </p>
+          <div class="grid-container_1" id="videoGrid"></div>
+          <script>
+            const videos = [
+              { src: "static/videos/teaser/turn_left.mp4", title: "Turn Left" },
+              { src: "static/videos/teaser/go_straight.mp4", title: "Go Straight" },
+              { src: "static/videos/teaser/turn_right.mp4", title: "Turn Right" },
+              { src: "static/videos/teaser/turn_left_2.mp4", title: "Turn Left (Case 2)" },
+              { src: "static/videos/teaser/go_straight_2.mp4", title: "Go Straight (Case 2)" },
+              { src: "static/videos/teaser/turn_right_2.mp4", title: "Turn Right (Case 2)" }
+            ];
 
-    <!-- =======================
-         5. SIM2REAL
-    ======================== -->
-    <h2>Sim-to-Real Generation</h2>
+            const grid = document.getElementById("videoGrid");
 
-    <div class="grid-container_4" id="videoGridSR"></div>
+            videos.forEach(item => {
+              const wrapper = document.createElement("div");
+              wrapper.className = "video-item";
 
-    <script>
-        const sim2real_videos = [
-            { src: "videos/sim2real/sim_1.mp4", title: "Simulation – Scene 1" },
-            { src: "videos/sim2real/real_1.mp4", title: "Our Generation – Scene 1" },
-            { src: "videos/sim2real/sim_2.mp4", title: "Simulation – Scene 2" },
-            { src: "videos/sim2real/real_2.mp4", title: "Our Generation – Scene 2" }
-        ];
+              const label = document.createElement("div");
+              label.className = "filename";
+              label.textContent = item.title;
 
-        const sim2real_video_grid = document.getElementById("videoGridSR");
+              const video = document.createElement("video");
+              video.controls = true;
+              video.src = item.src;
 
-        sim2real_videos.forEach(item => {
-            const wrapper = document.createElement("div");
-            wrapper.className = "video-item";
+              wrapper.appendChild(label);
+              wrapper.appendChild(video);
+              grid.appendChild(wrapper);
+            });
+          </script>
 
-            const label = document.createElement("div");
-            label.className = "filename";
-            label.textContent = item.title;
+          <h3 class="title is-4" style="margin-top: 20px;">Comparison with Previous Driving World Models</h3>
+          <p>
+            We input three driving trajectories (turn left, go straight and turn right) into Vista, Epona and our model
+            to
+            generate future driving videos for comparison.
+            As shown in bellow videos, all methods effectively handle the <em>go straight</em> control, but only our
+            <em>GenieDrive</em> generates physically plausible videos for <em>turn left</em> and <em>turn right</em>.
+          </p>
+          <div class="grid-container" id="videoGridCmp"></div>
+          <script>
+            const cmp_videos = [
+              { src: "static/videos/comparison/vista/vista_turn_left.mp4", title: "Vista – Turn Left" },
+              { src: "static/videos/comparison/vista/vista_go_straight.mp4", title: "Vista – Go Straight" },
+              { src: "static/videos/comparison/vista/vista_turn_right.mp4", title: "Vista – Turn Right" },
 
-            const video = document.createElement("video");
-            video.controls = true;
-            video.src = item.src;
+              { src: "static/videos/comparison/epona/epona_turn_left.mp4", title: "Epona – Turn Left" },
+              { src: "static/videos/comparison/epona/epona_go_straight.mp4", title: "Epona – Go Straight" },
+              { src: "static/videos/comparison/epona/epona_turn_right.mp4", title: "Epona – Turn Right" },
 
-            wrapper.appendChild(label);
-            wrapper.appendChild(video);
-            sim2real_video_grid.appendChild(wrapper);
-        });
-    </script>
+              { src: "static/videos/comparison/ours/turn_left.mp4", title: "Ours – Turn Left" },
+              { src: "static/videos/comparison/ours/go_straight.mp4", title: "Ours – Go Straight" },
+              { src: "static/videos/comparison/ours/turn_right.mp4", title: "Ours – Turn Right" }
+            ];
+
+            const Cmpgrid = document.getElementById("videoGridCmp");
+
+            cmp_videos.forEach(item => {
+              const wrapper = document.createElement("div");
+              wrapper.className = "video-item";
+
+              const label = document.createElement("div");
+              label.className = "filename";
+              label.textContent = item.title;
+
+              const video = document.createElement("video");
+              video.controls = true;
+              video.src = item.src;
+
+              wrapper.appendChild(label);
+              wrapper.appendChild(video);
+              Cmpgrid.appendChild(wrapper);
+            });
+          </script>
+
+          <h3 class="title is-4" style="margin-top: 20px;">Driving Video Editing</h3>
+          <p>
+            We can easily remove or insert objects in occupancy space and then generate driving videos conditioned on
+            the edited occupancy. We visualize the editing process applied to driving videos. Both <em>Removal</em> and
+            <em>Insertion</em> operations take effect progressively over time.
+          </p>
+
+          <div class="grid-container_4" id="videoGridEdit"></div>
+
+          <script>
+            const edit_videos = [
+              { src: "static/videos/edit/before_edit_0.mp4", title: "Before Editing (Scene 1)" },
+              { src: "static/videos/edit/edit_0.mp4", title: "Removing the Car (Scene 1)" },
+              { src: "static/videos/edit/before_edit_1.mp4", title: "Before Editing (Scene 2)" },
+              { src: "static/videos/edit/edit_1.mp4", title: "Inserting a Truck (Scene 2)" }
+            ];
+
+            const edit_video_grid = document.getElementById("videoGridEdit");
+
+            edit_videos.forEach(item => {
+              const wrapper = document.createElement("div");
+              wrapper.className = "video-item";
+
+              const label = document.createElement("div");
+              label.className = "filename";
+              label.textContent = item.title;
+
+              const video = document.createElement("video");
+              video.controls = true;
+              video.src = item.src;
+
+              wrapper.appendChild(label);
+              wrapper.appendChild(video);
+              edit_video_grid.appendChild(wrapper);
+            });
+          </script>
+
+          <h3 class="title is-4" style="margin-top: 20px;">Long Video Generation</h3>
+          <p>
+            Our <em>GenieDrive-L</em> produces 81-frame multi-view driving videos, and by applying the rollout
+            operation, it can further generate 241-frame (~20s) sequences—the longest video length in the NuScenes
+            dataset.
+          </p>
+          <div class="grid-container" id="videoGridLong"></div>
+
+          <script>
+            const long_videos = [
+              { src: "static/videos/long_videos/long_video_1.mp4", title: "Long Video – Scene 1" },
+              { src: "static/videos/long_videos/long_video_2.mp4", title: "Long Video – Scene 2" },
+              { src: "static/videos/long_videos/long_video_3.mp4", title: "Long Video – Scene 3" }
+            ];
+
+            const long_video_grid = document.getElementById("videoGridLong");
+
+            long_videos.forEach(item => {
+              const wrapper = document.createElement("div");
+              wrapper.className = "video-item";
+
+              const label = document.createElement("div");
+              label.className = "filename";
+              label.textContent = item.title;
+
+              const video = document.createElement("video");
+              video.controls = true;
+              video.src = item.src;
+
+              wrapper.appendChild(label);
+              wrapper.appendChild(video);
+              long_video_grid.appendChild(wrapper);
+            });
+          </script>
+
+          <h3 class="title is-4" style="margin-top: 20px;">Sim-to-Real Generation</h3>
+          <p>
+            The sim-to-real gap is largely caused by the unrealistic rendering quality of the simulator. However, there
+            is no obvious discrepancy between synthetic occupancy and real-world occupancy. Therefore, we leverage
+            occupancy from the CARLA simulator and use our method to transfer the synthetic occupancy into realistic
+            multi-view driving videos.
+          </p>
+          <div class="grid-container_1" id="videoGridSR"></div>
+          <script>
+            const sim2real_videos = [
+              { src: "static/videos/sim2real/sim_1.mp4", title: "Simulation – Scene 1" },
+              { src: "static/videos/sim2real/real_1.mp4", title: "Our Generation – Scene 1" },
+              { src: "static/videos/sim2real/sim_2.mp4", title: "Simulation – Scene 2" },
+              { src: "static/videos/sim2real/real_2.mp4", title: "Our Generation – Scene 2" }
+            ];
+
+            const sim2real_video_grid = document.getElementById("videoGridSR");
+
+            sim2real_videos.forEach(item => {
+              const wrapper = document.createElement("div");
+              wrapper.className = "video-item";
+
+              const label = document.createElement("div");
+              label.className = "filename";
+              label.textContent = item.title;
+
+              const video = document.createElement("video");
+              video.controls = true;
+              video.src = item.src;
+
+              wrapper.appendChild(label);
+              wrapper.appendChild(video);
+              sim2real_video_grid.appendChild(wrapper);
+            });
+          </script>
+
+
+        </div>
+      </div>
+      <!--/ Animation. -->
+
+    </div>
+  </section>
+
+
+  <section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{yang2025geniedrive,
+  author    = {Yang, Zhenya and Liu, Zhe and Lu, Yuxiang and Hou, Liping and Miao, Chenxuan and Peng, Siyi and Feng, Bailan and Bai, Xiang and Zhao, Hengshuang},
+  title     = {GenieDrive: Towards Physics-Aware Driving World Model with 4D Occupancy Guided Video Generation},
+  journal   = {arXiv preprint},
+  year      = {2025},
+}</code></pre>
+    </div>
+  </section>
+
+
+  <footer class="footer">
+    <div class="container">
+      <div class="content has-text-centered">
+        <a class="icon-link" href="https://github.com/Huster-YZY" class="external-link" disabled>
+          <i class="fab fa-github"></i>
+        </a>
+      </div>
+      <div class="columns is-centered">
+        <div class="column is-8">
+          <div class="content">
+            <p>
+              This page is modified from the template of <a
+                href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> and is licensed under a <a rel="license"
+                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0
+                International License</a>.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
 
 </body>
 
